@@ -23,7 +23,7 @@ services:
     container_name: springboot-ventas
     restart: unless-stopped
     ports:
-      - "8080:8080"
+      - "8081:8081"
     environment:
       DB_ENDPOINT: db
       DB_PORT: 3306
