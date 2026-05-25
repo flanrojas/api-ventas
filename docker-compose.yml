@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-ventas
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ventas_db
+      MYSQL_USER: ventas_user
+      MYSQL_PASSWORD: ventas_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: springboot-ventas
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      DB_ENDPOINT: db
+      DB_PORT: 3306
+      DB_NAME: ventas_db
+      DB_USERNAME: ventas_user
+      DB_PASSWORD: ventas_pass
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
