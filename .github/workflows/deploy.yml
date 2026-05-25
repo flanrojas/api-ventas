@@ -33,6 +33,15 @@ jobs:
       - name: Push image
         run: docker push ${{ vars.ECR_REPO_URL }}:latest
 
+      - name: Check EC2 host secret
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "EC2_HOST está vacío o no existe"
+            exit 1
+          else
+            echo "EC2_HOST existe"
+
+
       - name: Deploy on EC2 via SSH
         uses: appleboy/ssh-action@v1.2.0
         env:
